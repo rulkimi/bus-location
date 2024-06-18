@@ -35,6 +35,8 @@ for vehicle in vehicles:
     structured_vehicle = Vehicle(vehicle_id, route_id, latitude, longitude, timestamp)
     structured_vehicles.append(structured_vehicle)
 
+print(vehicles[0])
+
 bus_route = input("Which bus to see? ")
 
 for vehicle in structured_vehicles:
