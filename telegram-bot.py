@@ -5,6 +5,8 @@ import os
 from dotenv import load_dotenv
 import telebot
 import folium
+from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 
 load_dotenv()
 
@@ -42,6 +44,15 @@ for vehicle in vehicles:
     structured_vehicle = Vehicle(vehicle_id, route_id, latitude, longitude, timestamp)
     structured_vehicles.append(structured_vehicle)
 
+def reverse_geocode(lat, lon):
+  try:
+    geolocator = Nominatim(user_agent="geoapiExecisese")
+    location = geolocator.reverse((lat, lon), exactly_one=True)
+    return location.address if location else None
+  except (GeocoderTimedOut, GeocoderServiceError) as e:
+    print(f"Error: {e}")
+    return None
+
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     bot.reply_to(message, "Welcome to the Bus Tracker Bot! Type /track to start tracking a bus route.")
@@ -60,9 +71,10 @@ def track_bus(message):
             location_map = folium.Map(location=[vehicle.latitude, vehicle.longitude], zoom_start=15)
             folium.Marker([vehicle.latitude, vehicle.longitude], popup=f"Bus {vehicle.vehicle_id} - Route {vehicle.route_id}").add_to(location_map)
             
+            location_name = reverse_geocode(vehicle.latitude, vehicle.longitude)
             # Send the location as a location pin
             bot.send_location(message.chat.id, vehicle.latitude, vehicle.longitude)
-            bot.send_message(message.chat.id, f"Bus found:\n{vehicle}")
+            bot.send_message(message.chat.id, f"Bus found at {location_name}\n{vehicle}")
             return
     
     bot.send_message(message.chat.id, 'No bus found for the specified route.')
