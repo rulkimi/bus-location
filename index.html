@@ -16,6 +16,7 @@
 </head>
 <body>
     <h1>Bus Locations Map</h1>
+    <ul class="bus-list"></ul>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -35,32 +36,47 @@
 
         fetchLocation();
 
+        const busList = document.querySelector('.bus-list');
+
         async function fetchLocation() {
           try {
             const response = await fetch('http://localhost:8000/vehicle/T8910')
             const responseData = await response.json()
 
             const vehicles = responseData.vehicles;
-            const vehicle = vehicles[0];
 
-            console.log(vehicle.info.latitude, vehicle.info.longitude)
+            vehicles.forEach(vehicle => {
+              const marker = L.marker([vehicle.info.latitude, vehicle.info.longitude]).addTo(map);
+              const popupMessage = `
+                <b>Vehicle ID:</b> ${vehicle.info.vehicle_id}<br>
+                <b>Route ID:</b> ${vehicle.info.route_id}<br>
+                <b>Timestamp:</b> ${vehicle.info.timestamp}<br>
+                <b>Location:</b> ${vehicle.location}
+              `
+              marker.bindPopup(popupMessage).openPopup();
 
-            const marker = L.marker([vehicle.info.latitude, vehicle.info.longitude]).addTo(map);
-            const popupMessage = `
-              <b>Vehicle ID:</b> ${vehicle.info.vehicle_id}<br>
-              <b>Route ID:</b> ${vehicle.info.route_id}<br>
-              <b>Timestamp:</b> ${vehicle.info.timestamp}<br>
-              <b>Location:</b> ${vehicle.location}
-            `
-            marker.bindPopup(popupMessage).openPopup();;
-            map.setView([vehicle.info.latitude, vehicle.info.longitude], 50);
+              
+              const busData = document.createElement("li")
+              busData.innerHTML = `
+                <div
+                  onClick="setMapView(${vehicle.info.latitude}, ${vehicle.info.longitude})"
+                >
+                  ${vehicle.info.vehicle_id}
+                </div>
+              `
+              busList.appendChild(busData);
+            });
+           
+            map.setView([vehicles[0].info.latitude, vehicles[0].info.longitude], 50);
           } catch (error) {
             console.error(error) 
           }
         }
-        
-        
-        
+
+        function setMapView(latitude, longitude, zoom = 50) {
+          map.setView([latitude, longitude], zoom);
+        }
+
     </script>
 </body>
 </html>
