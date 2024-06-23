@@ -39,13 +39,14 @@
         // fetchLocation();
 
         const busList = document.querySelector('.bus-list');
+        const markers = {};
 
         async function fetchLocation() {
           try {
             const routeId = document.querySelector('.route-input').value;
 
-            const response = await fetch(`http://localhost:8000/vehicle/${routeId}`)
-            const responseData = await response.json()
+            const response = await fetch(`http://localhost:8000/vehicle/${routeId}`);
+            const responseData = await response.json();
 
             const vehicles = responseData.vehicles;
 
@@ -56,29 +57,30 @@
                 <b>Route ID:</b> ${vehicle.info.route_id}<br>
                 <b>Timestamp:</b> ${vehicle.info.timestamp}<br>
                 <b>Location:</b> ${vehicle.location}
-              `
-              marker.bindPopup(popupMessage).openPopup();
+              `;
+              marker.bindPopup(popupMessage);
+              markers[vehicle.info.vehicle_id] = marker;
 
-              
-              const busData = document.createElement("li")
+              const busData = document.createElement("li");
               busData.innerHTML = `
                 <div
-                  onClick="setMapView(${vehicle.info.latitude}, ${vehicle.info.longitude})"
+                  onClick="setMapView(${vehicle.info.latitude}, ${vehicle.info.longitude}, '${vehicle.info.vehicle_id}')"
                 >
                   ${vehicle.info.vehicle_id}
                 </div>
-              `
+              `;
               busList.appendChild(busData);
             });
-           
+
             map.setView([vehicles[0].info.latitude, vehicles[0].info.longitude], 50);
           } catch (error) {
-            console.error(error) 
+            console.error(error);
           }
         }
 
-        function setMapView(latitude, longitude, zoom = 50) {
+        function setMapView(latitude, longitude, vehicleId, zoom = 50) {
           map.setView([latitude, longitude], zoom);
+          markers[vehicleId].openPopup();
         }
 
     </script>
