@@ -16,6 +16,8 @@
 </head>
 <body>
     <h1>Bus Locations Map</h1>
+    <input type="text" class="route-input" value="t8150">
+    <button onClick="fetchLocation()">Search</button>
     <ul class="bus-list"></ul>
     <div id="map"></div>
 
@@ -34,13 +36,15 @@
         const initialMarker = L.marker([2.922682, 101.64256]).addTo(map);
         initialMarker.bindPopup('<b>Initial Location</b>').openPopup();
 
-        fetchLocation();
+        // fetchLocation();
 
         const busList = document.querySelector('.bus-list');
 
         async function fetchLocation() {
           try {
-            const response = await fetch('http://localhost:8000/vehicle/T8910')
+            const routeId = document.querySelector('.route-input').value;
+
+            const response = await fetch(`http://localhost:8000/vehicle/${routeId}`)
             const responseData = await response.json()
 
             const vehicles = responseData.vehicles;
