@@ -104,13 +104,13 @@ def get_vehicle_by_route(route_id: str):
     structured_vehicles = []
     for vehicle in vehicles:
         vehicle_id = vehicle.get('vehicle', {}).get('id', 'N/A')
-        route_id = vehicle.get('trip', {}).get('routeId', 'N/A')
+        vehicle_route_id = vehicle.get('trip', {}).get('routeId', 'N/A')
         latitude = vehicle.get('position', {}).get('latitude', 'N/A')
         longitude = vehicle.get('position', {}).get('longitude', 'N/A')
         timestamp = vehicle.get('timestamp', 'N/A')
         structured_vehicle = Vehicle(
             vehicle_id=vehicle_id,
-            route_id=route_id,
+            route_id=vehicle_route_id,
             latitude=latitude,
             longitude=longitude,
             timestamp=timestamp
