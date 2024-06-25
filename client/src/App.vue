@@ -37,7 +37,8 @@ export default {
     setMapView({ latitude, longitude, vehicleId }) {
       this.$refs.busMap.center = [latitude, longitude];
       this.$refs.busMap.zoom = 50;
-    }
+      this.$refs.busMap.openMarkerPopup(latitude, longitude);
+    },
   }
 };
 </script>

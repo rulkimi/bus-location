@@ -39,22 +39,7 @@ export default {
       const firstBus = newValue[0];
       this.center = [firstBus.info.latitude, firstBus.info.longitude];
 
-      this.$nextTick(() => {
-        const markers = this.$refs.markers;
-        if (markers) {
-          const markerInstance = markers.find(marker =>
-            marker.$props.latLng[0] === firstBus.info.latitude &&
-            marker.$props.latLng[1] === firstBus.info.longitude
-          );
-
-          if (markerInstance && markerInstance.leafletObject) {
-            // open the popup associated with the marker using leafletObject
-            markerInstance.leafletObject.openPopup();
-          } else {
-            console.error('Marker instance or leafletObject not found:', markerInstance);
-          }
-        }
-      });
+      this.$nextTick(() => this.openMarkerPopup(firstBus.info.latitude, firstBus.info.longitude));
     }
   },
   data() {
@@ -65,6 +50,24 @@ export default {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     };
   },
+  methods: {
+    openMarkerPopup(latitude, longitude) {
+      const markers = this.$refs.markers;
+      if (!markers) return;
+
+      const markerInstance = markers.find(marker =>
+        marker.$props.latLng[0] === latitude &&
+        marker.$props.latLng[1] === longitude
+      );
+
+      if (markerInstance && markerInstance.leafletObject) {
+        // open the popup associated with the marker using leafletObject
+        markerInstance.leafletObject.openPopup();
+      } else {
+        console.error('Marker instance or leafletObject not found:', markerInstance);
+      }
+    }
+  }
 };
 </script>
 
