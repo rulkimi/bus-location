@@ -31,9 +31,11 @@
               />
               <button
                 @click="fetchLocation(routeId)"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md w-full"
+                class="bg-blue-500 text-white px-4 py-2 rounded-md w-full"
+                :class="loading ? 'opacity-75' : 'hover:bg-blue-600'"
+                :disabled="loading"
               >
-                Search
+                  Search
               </button>
               <bus-list :buses="buses" @busSelected="setMapView" class="mt-4" />
             </div>
@@ -65,7 +67,8 @@ export default {
     return {
       routeId: '',
       buses: [],
-      routes: []  // Array to store available routes
+      routes: [],
+      loading: false
     };
   },
   async mounted() {
@@ -73,6 +76,7 @@ export default {
   },
   methods: {
     async fetchLocation(routeId) {
+      this.loading = true;
       this.routeId = routeId;
       try {
         const response = await fetch(`http://localhost:8000/vehicle/${routeId}`);
@@ -80,6 +84,8 @@ export default {
         this.buses = responseData.vehicles;
       } catch (error) {
         console.error(error);
+      } finally {
+        this.loading = false;
       }
     },
     async fetchAllRoutes() {
