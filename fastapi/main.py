@@ -11,11 +11,7 @@ from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 
 load_dotenv()
 
-BOT_TOKEN = os.getenv('BOT_TOKEN')
 USER_AGENT = os.getenv('EMAIL')
-
-print(USER_AGENT)
-print(BOT_TOKEN)
 
 app = FastAPI()
 

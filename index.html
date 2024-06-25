@@ -43,8 +43,7 @@
 
         async function fetchLocation() {
           const routeId = document.querySelector('.route-input').value;
-          const busData = document.createElement("li");
-
+          
           try {
             const response = await fetch(`http://localhost:8000/vehicle/${routeId}`);
             const responseData = await response.json();
@@ -64,6 +63,8 @@
               marker.bindPopup(popupMessage);
               markers[vehicle.info.vehicle_id] = marker;
 
+              const busData = document.createElement("li");
+
               busData.innerHTML = `
                 <div
                   onClick="setMapView(${vehicle.info.latitude}, ${vehicle.info.longitude}, '${vehicle.info.vehicle_id}')"
@@ -73,6 +74,8 @@
               `;
               busList.appendChild(busData);
             });
+
+            console.log(vehicles)
 
             setMapView(vehicles[0].info.latitude, vehicles[0].info.longitude, vehicles[0].info.vehicle_id);
           } catch (error) {
