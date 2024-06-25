@@ -1,7 +1,12 @@
 <template>
   <l-map :zoom="zoom" :center="center" style="height: 600px; width: 100%;">
     <l-tile-layer :url="url" :attribution="attribution" />
-    <l-marker v-for="bus in buses" :key="bus.info.vehicle_id" :lat-lng="[bus.info.latitude, bus.info.longitude]">
+    <l-marker
+      v-for="bus in buses"
+      :key="bus.info.vehicle_id"
+      :lat-lng="[bus.info.latitude, bus.info.longitude]"
+      ref="markers"
+    >
       <l-popup>
         <div>
           <b>Vehicle ID:</b> {{ bus.info.vehicle_id }}<br>
@@ -29,6 +34,29 @@ export default {
   props: {
     buses: Array
   },
+  watch: {
+    buses(newValue) {
+      const firstBus = newValue[0];
+      this.center = [firstBus.info.latitude, firstBus.info.longitude];
+
+      this.$nextTick(() => {
+        const markers = this.$refs.markers;
+        if (markers) {
+          const markerInstance = markers.find(marker =>
+            marker.$props.latLng[0] === firstBus.info.latitude &&
+            marker.$props.latLng[1] === firstBus.info.longitude
+          );
+
+          if (markerInstance && markerInstance.leafletObject) {
+            // open the popup associated with the marker using leafletObject
+            markerInstance.leafletObject.openPopup();
+          } else {
+            console.error('Marker instance or leafletObject not found:', markerInstance);
+          }
+        }
+      });
+    }
+  },
   data() {
     return {
       center: [2.922682, 101.64256],
@@ -40,6 +68,3 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Add any component-specific styles here */
-</style>
