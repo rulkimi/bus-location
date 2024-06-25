@@ -1,17 +1,33 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex items-center justify-center">
-    <div class="max-w-md w-full bg-white p-6 rounded-lg shadow-md">
-      <h1 class="text-2xl font-bold mb-4">Bus Locations Map</h1>
-      <input type="text"
-             v-model="routeId"
-             class="route-input border border-gray-300 px-3 py-2 rounded-md w-full mb-4"
-             placeholder="Enter route ID">
-      <button @click="fetchLocation"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
-        Search
-      </button>
-      <bus-list :buses="buses" @busSelected="setMapView" class="mt-4" />
-      <bus-map :buses="buses" ref="busMap" class="mt-4" />
+    <div class="container mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Left side (1/3 width on medium screens and larger) -->
+        <div class="md:col-span-1">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <h1 class="text-2xl font-bold mb-4">Bus Locations Map</h1>
+            <input
+              type="text"
+              v-model="routeId"
+              class="route-input border border-gray-300 px-3 py-2 rounded-md w-full mb-4"
+              placeholder="Enter route ID"
+            />
+            <button
+              @click="fetchLocation"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md w-full"
+            >
+              Search
+            </button>
+            <bus-list :buses="buses" @busSelected="setMapView" class="mt-4" />
+          </div>
+        </div>
+        <!-- Right side (2/3 width on medium screens and larger) -->
+        <div class="md:col-span-2">
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <bus-map :buses="buses" ref="busMap" class="h-96" />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +44,7 @@ export default {
   },
   data() {
     return {
-      routeId: 't8150',
+      routeId: 'T8150',
       buses: []
     };
   },
