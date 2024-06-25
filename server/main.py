@@ -17,8 +17,8 @@ app = FastAPI()
 
 # Define origins for CORS
 origins = [
-    "http://localhost:5500",  # React development server
-    "http://127.0.0.1:5500",  # React development server alternative
+    "http://localhost:5173",  # React development server
+    "http://127.0.0.1:5173",  # React development server alternative
     # Add other origins as needed
 ]
 
