@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import "leaflet/dist/leaflet.css";
+import './index.css'
 import { Icon } from 'leaflet';
 
 // Import the marker images using ES module syntax
