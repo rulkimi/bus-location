@@ -1,6 +1,22 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex items-center justify-center">
     <div class="container mx-auto px-4 py-8">
+      <!-- Available Routes List -->
+      <div class="mt-4">
+        <p class="text-lg font-semibold mb-2">Available Routes:</p>
+        <div class="flex flex-wrap">
+          <div
+            v-for="route in routes"
+            :key="route"
+            class="bg-white shadow-md rounded-lg mb-2 px-4 py-2 cursor-pointer hover:bg-gray-100 mr-2"
+            @click="selectRoute(route)"
+            style="max-width: calc(100% - 4px);"
+          >
+            {{ route }}
+          </div>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Left side (1/3 width on medium screens and larger) -->
         <div class="md:col-span-1">
@@ -18,6 +34,7 @@
             >
               Search
             </button>
+
             <bus-list :buses="buses" @busSelected="setMapView" class="mt-4" />
           </div>
         </div>
@@ -45,8 +62,12 @@ export default {
   data() {
     return {
       routeId: 'T8150',
-      buses: []
+      buses: [],
+      routes: []  // Array to store available routes
     };
+  },
+  async mounted() {
+    await this.fetchAllRoutes();
   },
   methods: {
     async fetchLocation() {
@@ -58,11 +79,23 @@ export default {
         console.error(error);
       }
     },
+    async fetchAllRoutes() {
+      try {
+        const response = await fetch(`http://localhost:8000/routes`);
+        const responseData = await response.json();
+        this.routes = responseData.active_routes;
+      } catch (error) {
+        console.error(error);
+      }
+    },
     setMapView({ latitude, longitude, vehicleId }) {
       this.$refs.busMap.center = [latitude, longitude];
       this.$refs.busMap.zoom = 50;
       this.$refs.busMap.openMarkerPopup(latitude, longitude);
     },
+    selectRoute(route) {
+      this.routeId = route; // Set the selected route to the input field
+    }
   }
 };
 </script>
