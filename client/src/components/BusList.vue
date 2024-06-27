@@ -11,13 +11,14 @@
 
 <script>
 export default {
+  emits: ['bus-selected'],
   name: 'BusList',
   props: {
     buses: Array
   },
   methods: {
     handleClick(latitude, longitude, vehicleId) {
-      this.$emit('busSelected', { latitude, longitude, vehicleId });
+      this.$emit('bus-selected', { latitude, longitude, vehicleId });
     }
   }
 };

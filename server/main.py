@@ -15,14 +15,11 @@ USER_AGENT = os.getenv('EMAIL')
 
 app = FastAPI()
 
-# Define origins for CORS
 origins = [
-    "http://localhost:5173",  # React development server
-    "http://127.0.0.1:5173",  # React development server alternative
-    # Add other origins as needed
+    "http://localhost:5173", 
+    "http://127.0.0.1:5173",
 ]
 
-# Add CORS middleware to the FastAPI application
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  # Allow specific origins

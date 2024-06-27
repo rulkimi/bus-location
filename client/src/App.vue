@@ -4,17 +4,7 @@
       <!-- Available Routes List -->
       <div class="mt-4">
         <h1 class="text-2xl font-bold mb-4">Available Routes:</h1>
-        <div class="flex flex-wrap">
-          <div
-            v-for="route in routes"
-            :key="route"
-            class="bg-white shadow-md rounded-lg mb-2 px-4 py-2 cursor-pointer hover:bg-gray-100 mr-2"
-            @click="fetchLocation(route)"
-            style="max-width: calc(100% - 4px);"
-          >
-            {{ route }}
-          </div>
-        </div>
+        <active-buses :routes="routes" @fetch-location="fetchLocation" />
       </div>
 
       <div class="mt-4">
@@ -37,7 +27,7 @@
               >
                   Search
               </button>
-              <bus-list :buses="buses" @busSelected="setMapView" class="mt-4" />
+              <bus-list :buses="buses" @bus-selected="setMapView" class="mt-4" />
             </div>
           </div>
           <!-- Right side (2/3 width on medium screens and larger) -->
@@ -54,6 +44,7 @@
 </template>
 
 <script>
+import ActiveBuses from './components/ActiveBuses.vue';
 import BusMap from './components/BusMap.vue';
 import BusList from './components/BusList.vue';
 
@@ -61,7 +52,8 @@ export default {
   name: 'App',
   components: {
     BusMap,
-    BusList
+    BusList,
+    ActiveBuses
   },
   data() {
     return {
