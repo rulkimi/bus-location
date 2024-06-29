@@ -36,6 +36,7 @@ export default {
   },
   watch: {
     buses(newValue) {
+      if (!newValue) return;
       const firstBus = newValue[0];
       this.center = [firstBus.info.latitude, firstBus.info.longitude];
 

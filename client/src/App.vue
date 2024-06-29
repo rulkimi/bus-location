@@ -27,7 +27,13 @@
               >
                   Search
               </button>
-              <bus-list :buses="buses" @bus-selected="setMapView" class="mt-4" />
+              <bus-list
+                v-if="buses"
+                :buses="buses"
+                @bus-selected="setMapView"
+                class="mt-4"
+              />
+              <div v-else-if="noBusFound" class="my-4">No bus found for route: {{ routeId.toUpperCase() }}</div>
             </div>
           </div>
           <!-- Right side (2/3 width on medium screens and larger) -->
@@ -60,7 +66,8 @@ export default {
       routeId: '',
       buses: [],
       routes: [],
-      loading: false
+      loading: false,
+      noBusFound: false
     };
   },
   async mounted() {
@@ -74,6 +81,8 @@ export default {
         const response = await fetch(`http://localhost:8000/vehicle/${routeId}`);
         const responseData = await response.json();
         this.buses = responseData.vehicles;
+
+        if (!this.buses) this.noBusFound = true;
       } catch (error) {
         console.error(error);
       } finally {
